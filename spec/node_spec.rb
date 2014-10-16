@@ -51,7 +51,7 @@ describe Node do
       root_node.add_child(first_node)
       first_node.add_child(second_node)
       second_node.add_child(third_node)
-      expect(third_node.prefix).to eq("ant")
+      expect(third_node.current_word).to eq("ant")
     end
   end
 
@@ -71,7 +71,18 @@ describe Node do
     end
   end
 
-  describe '::find_word' do
+  describe '::find_prefix' do
+    it "returns vertex where prefix ends" do
+      Node.add_word("helicopter", root_node)
+      Node.add_word("hell", root_node)
+      Node.add_word("hello", root_node)
+      result = root_node.children["h"].children["e"].children["l"]
+      expect(Node.find_prefix("hex", root_node)).to eq(nil)
+      expect(Node.find_prefix("hel", root_node)).to eq(result)
+    end
+  end
+
+  describe '::find_words' do
     it "returns list of words that have that have a given prefix" do
       Node.add_word("have", root_node)
       Node.add_word("heck", root_node)
@@ -79,11 +90,24 @@ describe Node do
       Node.add_word("hell", root_node)
       Node.add_word("hello", root_node)
       Node.add_word("hero", root_node)
+      Node.add_word("haphazard", root_node)
       Node.add_word("happens", root_node)
       Node.add_word("happy", root_node)
-      expect(Node.find_word("hex", root_node)).to eq([])
-      expect(Node.find_word("hel", root_node).sort).to eq(
+      expect(Node.find_words("hex", root_node)).to eq([])
+      expect(Node.find_words("hel", root_node).sort).to eq(
         ["hello", "hell", "helicopter"].sort
+      )
+      expect(Node.find_words("happ", root_node).sort).to eq(
+        ["happy", "happens"].sort
+      )
+    end
+
+    it "list includes prefix if prefix is a full word" do
+      Node.add_word("milo", root_node)
+      Node.add_word("milord", root_node)
+      Node.add_word("milos", root_node)
+      expect(Node.find_words("milo", root_node).sort).to eq(
+        ["milo", "milord", "milos"].sort
       )
     end
   end

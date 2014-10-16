@@ -1,12 +1,12 @@
 class Node
-  attr_reader :letter, :children, :full_word, :parent, :prefix
+  attr_reader :letter, :children, :full_word, :parent, :current_word
 
   def initialize(letter)
     @letter = letter
     @children = {}
     @full_word = false
     @parent = nil
-    @prefix = ""
+    @current_word = ""
   end
 
   def add_child(node)
@@ -14,15 +14,15 @@ class Node
     raise "node already exists" unless @children[ node.letter ].nil?
     @children[node.letter] = node
     node.set_parent(self)
-    node.set_prefix(self)
+    node.set_current_word(self)
   end
 
   def set_parent(parent_node)
     @parent = parent_node
   end
 
-  def set_prefix(parent_node)
-    @prefix = parent_node.prefix + @letter
+  def set_current_word(parent_node)
+    @current_word = parent_node.current_word + @letter
   end
 
   def make_full
@@ -42,16 +42,30 @@ class Node
     Node.add_word(letters.join(''), root_node.children[letter])
   end
 
-  def self.find_word(prefix, root_node)
+  def self.find_prefix(prefix, root_node)
     letters = prefix.split('')
     current_node = root_node
     letters.each do |letter|
       if current_node.children[letter]
         current_node = current_node.children[letter]
       else
-        return []
+        return nil
       end
     end
-    current_node.children.keys
+    current_node
+  end
+
+  def self.find_words(prefix, root_node)
+    vertex = Node.find_prefix(prefix, root_node)
+    return [] if vertex.nil?
+    words = []
+    words << vertex.current_word if vertex.full_word
+    nodes = vertex.children.values
+    until nodes.empty?
+      current_node = nodes.shift
+      nodes.push(*current_node.children.values)
+      words << current_node.current_word if current_node.full_word
+    end
+    words
   end
 end
