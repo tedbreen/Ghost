@@ -68,4 +68,25 @@ class Node
     end
     words
   end
+
+  def self.word_exist?(word, root_node)
+    vertex = Node.find_prefix(word, root_node)
+    return false if vertex.nil?
+    return true if vertex.full_word
+    false
+  end
+
+  def self.ghost_words(prefix, root_node) # special for Ghost game
+    vertex = Node.find_prefix(prefix, root_node)
+    return [] if vertex.nil?
+    words = []
+    words << vertex.current_word if vertex.full_word && vertex.current_word.length > 3
+    nodes = vertex.children.values
+    until nodes.empty?
+      current_node = nodes.shift
+      nodes.push(*current_node.children.values)
+      words << current_node.current_word if current_node.full_word
+    end
+    words
+  end
 end
