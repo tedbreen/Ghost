@@ -16,7 +16,6 @@ class Game
     playing = true
     while playing
       puts "The game word is: '#{@game_word}'\n\n"
-      # playing = human
       if @human_player
         playing = human
       else
@@ -36,13 +35,18 @@ class Game
   end
 
   def computer
-    word = computer_words.shift.split('')
-    letter = ''
-    word.each_with_index do |char, idx|
-      letter = char
-      break if char != @game_word[idx]
+    options = computer_words
+    if computer_words.empty?
+      false
+    else
+      word = options.shift.split('')
+      letter = ''
+      word.each_with_index do |char, idx|
+        letter = char
+        break if char != @game_word[idx]
+      end
+      letter_chosen(letter) # returns true/false
     end
-    letter_chosen(letter)
   end
 
   def computer_words
@@ -52,11 +56,23 @@ class Game
     else
       word_length = @game_word.length + 2
     end
-    while options.empty? || word_length > 100
+    while word_length < 100
       options.push(*Node.best_words(@game_word, @dictionary, word_length))
-      word_length += 2 if options.empty?
+      if options.empty?
+        word_length += 2
+      else
+        return options
+      end
     end
-    p options unless @game_word.length < 3
+    word_length = 100
+    while word_length > @game_word.length
+      options.push(*Node.best_words(@game_word, @dictionary, word_length))
+      if options.empty?
+        word_length -= 2
+      else
+        return options
+      end
+    end
     options
   end
 
