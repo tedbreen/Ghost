@@ -10,35 +10,61 @@ class Game
   end
 
   def play
-    puts "New game! Let's play!\n\n"
+    puts "***** New game! Let's play! *****\n\n"
     @game_word = ''
     @human_player = true
     playing = true
     while playing
       puts "The game word is: '#{@game_word}'\n\n"
-      letter = choose_letter
-      if letter.nil?
-        puts "Invalid entry: must be a single letter from a to z\n\n"
+      # playing = human
+      if @human_player
+        playing = human
       else
-        if valid_letter?(letter)
-          @game_word += letter
-          if ends_game?(@game_word)
-            puts "Game over! You spelled '#{@game_word}'"
-            puts "#{display_player(@human_player)} loses!\n\n"
-            playing = false
-          else
-            @human_player = !@human_player
-          end
-        else
-          puts "Invalid entry: your letter choice won't make a word\n\n"
-        end
-      end
+        playing = computer
+      end      
     end
   end
 
+  def human
+    letter = choose_letter
+    if letter.nil?
+      puts "Invalid entry: must be a single letter from a to z\n\n"
+      true
+    else
+      letter_chosen(letter)
+    end
+  end
+
+  def computer
+    word = computer_words.shift.split('')
+    letter = ''
+    word.each_with_index do |char, idx|
+      letter = char
+      break if char != @game_word[idx]
+    end
+    letter_chosen(letter)
+  end
+
+  def computer_words
+    options = []
+    if @game_word.length == 1
+      word_length = 5
+    else
+      word_length = @game_word.length + 2
+    end
+    while options.empty? || word_length > 100
+      options.push(*Node.best_words(@game_word, @dictionary, word_length))
+      word_length += 2 if options.empty?
+    end
+    p options unless @game_word.length < 3
+    options
+  end
+
   def choose_letter
-    print "Choose a letter (a-z): "
+    p Node.find_words(@game_word, @dictionary) unless @game_word == ''
+    print "#{display_player(@human_player)}: Choose a letter (a-z): "
     letter = gets.chomp
+    puts "" # blank
     return nil if letter.length > 1
     letter.ord < 97 || letter.ord > 122 ? nil : letter
   end
@@ -46,11 +72,18 @@ class Game
   def valid_letter?(letter)
     temp = @game_word + letter
     words = Node.ghost_words(temp, @dictionary)
-    words.length > 0 ? true : false
+    if words.length > 0
+      true
+    else
+      puts "Invalid entry: your letter choice won't make a word\n\n"
+      false
+    end
   end
 
   def ends_game?(word)
     if Node.word_exist?(word, @dictionary) && word.length > 3
+      puts "Game over! You spelled '#{@game_word}'\n\n"
+      puts "#{display_player(@human_player)} loses!\n\n"
       true
     else
       false
@@ -68,6 +101,21 @@ class Game
     File.open('word_list.txt').each { |word| Node.add_word(word.chomp, root) }
     puts "That took #{Time.now - start_time} seconds.\n\n"
     root
+  end
+
+  def letter_chosen(letter)
+    if valid_letter?(letter)
+      puts "#{display_player(@human_player)} chooses '#{letter}'\n\n"
+      @game_word += letter
+      if ends_game?(@game_word)
+        return false
+      else
+        @human_player = !@human_player
+        return true
+      end
+    else
+      return true
+    end
   end
 end
 

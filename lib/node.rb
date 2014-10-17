@@ -68,7 +68,8 @@ class Node
     end
     words
   end
-
+  
+  ## special methods for Ghost game ##
   def self.word_exist?(word, root_node)
     vertex = Node.find_prefix(word, root_node)
     return false if vertex.nil?
@@ -76,7 +77,7 @@ class Node
     false
   end
 
-  def self.ghost_words(prefix, root_node) # special for Ghost game
+  def self.ghost_words(prefix, root_node) # => returns words of 4 letters length or longer
     vertex = Node.find_prefix(prefix, root_node)
     return [] if vertex.nil?
     words = []
@@ -101,7 +102,7 @@ class Node
     until nodes.empty?
       current_node = nodes.shift
       nodes.push(*current_node.children.values)
-      if current_node.full_word && current_node.full_word.length == word_length
+      if current_node.full_word && current_node.current_word.length == word_length
         words << current_node.current_word
       end
     end
