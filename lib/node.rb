@@ -81,7 +81,9 @@ class Node
     vertex = Node.find_prefix(prefix, root_node)
     return [] if vertex.nil?
     words = []
-    words << vertex.current_word if vertex.full_word && vertex.current_word.length > 3
+    if vertex.full_word && vertex.current_word.length > 3
+      words << vertex.current_word
+    end
     nodes = vertex.children.values
     until nodes.empty?
       current_node = nodes.shift
