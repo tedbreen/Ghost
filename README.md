@@ -7,5 +7,3 @@ Write a program that allows a user to play Ghost against the computer.
 The computer should play optimally given the following dictionary: `word_list.txt` (1.66 MB). Allow the human to play first. If the computer thinks it will win, it should play randomly among all its winning moves; if the computer thinks it will lose, it should play so as to extend the game as long as possible (choosing randomly among choices that force the maximal game length).
 
 *In your submission email, answer this question: if the human starts the game with 'n', and the computer plays according to the strategy above, what unique word will complete the human's victory?*
-
-My answer: `naan`

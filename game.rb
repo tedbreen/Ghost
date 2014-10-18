@@ -55,7 +55,7 @@ class Game
     letter.ord < 97 || letter.ord > 122 ? nil : letter
   end
 
-  def letter_chosen(letter) # => helper method for Game#human
+  def letter_chosen(letter) # => helper method for Game#human, Game#computer
     if valid_letter?(letter)
       puts "#{display_player(@human_player)} chooses '#{letter}'\n\n"
       @game_word += letter
@@ -72,7 +72,7 @@ class Game
 
   def valid_letter?(letter) # => helper method for Game#letter_chosen
     temp = @game_word + letter
-    words = Node.ghost_words(temp, @dictionary)
+    words = Node.find_words(temp, @dictionary)
     if words.length > 0
       true
     else
@@ -123,10 +123,3 @@ game = Game.new('file_list.txt')
 while true
   game.play
 end
-
-# root = Game.load_dictionary('file_list.txt')
-# while true
-#   print "enter a word: "
-#   input = gets.chomp
-#   p Node.find_words(input, root)
-# end
