@@ -1,4 +1,4 @@
-require_relative 'lib\node'
+require_relative 'lib/node'
 
 class Game
   attr_reader :dictionary, :human_player, :game_word

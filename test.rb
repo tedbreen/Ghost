@@ -1,4 +1,4 @@
-require_relative 'lib\node.rb'
+require_relative 'lib/node'
 
 start_time = Time.now
 puts "loading dictionary with words. this will take a minute"
