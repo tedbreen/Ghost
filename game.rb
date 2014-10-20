@@ -43,9 +43,7 @@ class Game
       next if words.length == 0
       all_odd = true
       words.each do |word|
-        if word.length % 2 == 0
-          all_odd = false
-        end
+        all_odd = false if word.length % 2 == 0          
         if word.length > longest_word.length
           best_letter = letter
           longest_word = word
@@ -53,7 +51,7 @@ class Game
       end
       return letter_chosen(letter) if all_odd
     end
-    letter_chosen(best_letter)
+    letter_chosen(best_letter)  # => picks letter to make longest word
   end
 
   def choose_letter # => helper method for Game#human
