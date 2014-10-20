@@ -58,7 +58,7 @@ class Game
     print "#{display_player(@human_player)}: Choose a letter (a-z): "
     letter = gets.chomp
     puts "" # blank
-    return nil if letter.length > 1
+    return nil if letter.length == 0 || letter.length > 1
     letter.ord < 97 || letter.ord > 122 ? nil : letter
   end
 
