@@ -7,6 +7,7 @@ class Game
     @dictionary = Game.load_dictionary(file)
     @human_player = true  # human is true, computer is false
     @game_word = ''
+    @alphabet = ('a'..'z').to_a
   end
 
   def play
@@ -35,16 +36,24 @@ class Game
   end
 
   def computer
-    all_words = Node.find_words(@game_word, @dictionary)
-    options = all_words.select { |word| word.length % 2 == 1 }
-    if options.empty?
-      word = all_words.reverse.shift.split('')
-    else
-      word = options.shift.split('')  
+    best_letter = ''
+    longest_word = ''
+    @alphabet.each do |letter|
+      words = Node.find_words(@game_word + letter, @dictionary)
+      next if words.length == 0
+      all_odd = true
+      words.each do |word|
+        if word.length % 2 == 0
+          all_odd = false
+        end
+        if word.length > longest_word.length
+          best_letter = letter
+          longest_word = word
+        end
+      end
+      return letter_chosen(letter) if all_odd
     end
-    @game_word.length.times { word.shift }
-    letter = word.shift
-    letter_chosen(letter)
+    letter_chosen(best_letter)
   end
 
   def choose_letter # => helper method for Game#human
