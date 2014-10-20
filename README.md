@@ -15,13 +15,13 @@ The computer should play optimally given the following dictionary: `word_list.tx
 ### Results
 
 1. Implemented a [trie](http://en.wikipedia.org/wiki/Trie) to store all the words from the text file. See `lib/node.rb`
-    * Words are added by splitting into array of characters and adding each character recursively.
-    * Each node contains variables that store the letter, parent, children, the word that is spelled starting from the root, and whether or not that node completes a full word.
+  * Words are added by splitting into array of characters and adding each character recursively.
+  * Each node contains variables that store the letter, parent, children, the word that is spelled starting from the root, and whether or not that node completes a full word.
 2. Implemented game play with a game class that includes human and computer moves. Human moves are pretty straightforward: pick a letter and start making a word. Computer moves are based on an algorithm that finds all words that can be formed from the current game word.
-    a. Computer first tries to find a letter that can only produce words with an odd number of letters.  That forces human to complete a word.
-    b. If such a case does not exist, the computer than selects the letter than can lead to the longest word from the current game word.
-    c. This is repeated every time the computer plays.  Computer can't always force an odd-numbered-length word on its first move, but often can on its second.
-    d. Current list of letters that a human can start with to beat the computer: a, h, k, n, p, r, w. (bonus question was apparently not solved)
+  * Computer first tries to find a letter that can only produce words with an odd number of letters.  That forces human to complete a word.
+  * If such a case does not exist, the computer than selects the letter than can lead to the longest word from the current game word.
+  * This is repeated every time the computer plays.  Computer can't always force an odd-numbered-length word on its first move, but often can on its second.
+  * Current list of letters that a human can start with to beat the computer: a, h, k, n, p, r, w. (bonus question was apparently not solved)
 
 ### Notes
 
